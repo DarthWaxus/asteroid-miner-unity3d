@@ -90,6 +90,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &6937588597180695309
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7099353222156494059}
+  m_Layer: 0
+  m_Name: Uranuses
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7099353222156494059
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6937588597180695309}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1160584792213621430}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &5684126389591368144
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -98,6 +129,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 776077646965010260, guid: f6e60e5d597222346b4f515a4fada903, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: dd6fe615951e09e4fa74ff49e66c6cb6, type: 2}
     - target: {fileID: 5566553693915215447, guid: f6e60e5d597222346b4f515a4fada903, type: 3}
       propertyPath: m_Name
       value: Asteroid Variant
@@ -146,16 +181,26 @@ PrefabInstance:
       propertyPath: type
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8058092355509953354, guid: f6e60e5d597222346b4f515a4fada903, type: 3}
+      propertyPath: destroyDistance
+      value: 15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6843548859299883878, guid: f6e60e5d597222346b4f515a4fada903, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6244705691890434953}
+    - targetCorrespondingSourceObject: {fileID: 6843548859299883878, guid: f6e60e5d597222346b4f515a4fada903, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7099353222156494059}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5566553693915215447, guid: f6e60e5d597222346b4f515a4fada903, type: 3}
       insertIndex: -1
       addedObject: {fileID: -415498165092556688}
+    - targetCorrespondingSourceObject: {fileID: 5566553693915215447, guid: f6e60e5d597222346b4f515a4fada903, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7275381717466779513}
   m_SourcePrefab: {fileID: 100100000, guid: f6e60e5d597222346b4f515a4fada903, type: 3}
 --- !u!1 &261857226559330183 stripped
 GameObject:
@@ -198,6 +243,19 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &7275381717466779513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 261857226559330183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9df9dbbce58c492db5af5ac222bf037b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AsteroidMiner.Asteroid
+  uranuses: []
 --- !u!4 &1160584792213621430 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6843548859299883878, guid: f6e60e5d597222346b4f515a4fada903, type: 3}

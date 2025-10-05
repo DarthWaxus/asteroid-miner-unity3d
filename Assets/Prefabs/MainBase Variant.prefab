@@ -301,8 +301,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9188884422990641420, guid: 4440599b8ba81b447a46f9e50ad7692b, type: 3}
+      propertyPath: type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9188884422990641420, guid: 4440599b8ba81b447a46f9e50ad7692b, type: 3}
       propertyPath: rotateSpeed
-      value: 5
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -379,4 +383,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24e667c78b2b416ebf4a2ba0df639999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AsteroidMiner.MainBase
-  radius: 0.5
+  stageObject: {fileID: 8927721650128287648}
+--- !u!114 &8927721650128287648 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9188884422990641420, guid: 4440599b8ba81b447a46f9e50ad7692b, type: 3}
+  m_PrefabInstance: {fileID: 315491910167809708}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6445184126247477949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 152ec560883c451fbe452d8ea042d5f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AsteroidMiner.StageObject

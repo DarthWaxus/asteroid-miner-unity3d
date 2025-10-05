@@ -9,6 +9,7 @@ namespace AsteroidMiner
         public bool dynamic;
         public float rotateSpeed = 0;
         public StageObjectType type = StageObjectType.None;
+        public float destroyDistance = 50;
 
         private void FixedUpdate()
         {
@@ -19,7 +20,7 @@ namespace AsteroidMiner
 
             if (dynamic)
             {
-                if (Vector2.Distance(Vector3.zero, rb.position) > 50)
+                if (Vector2.Distance(Vector3.zero, rb.position) > destroyDistance)
                 {
                     EventManager.StageObjectDestroyed.Invoke(this);
                 }
@@ -41,6 +42,9 @@ namespace AsteroidMiner
     public enum StageObjectType
     {
         None,
-        Asteroid
+        Asteroid,
+        MainBase,
+        Player,
+        Uranus,
     }
 }

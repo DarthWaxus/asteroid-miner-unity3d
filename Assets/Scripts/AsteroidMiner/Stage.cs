@@ -9,13 +9,14 @@ namespace AsteroidMiner
     public class Stage : MonoBehaviour
     {
         public int currentAsteroidsNum = 0;
-        public int maxAsteroidsNum = 10;
+        public int maxAsteroidsNum = 30;
         public float startRadius = 2000;
         public List<GameObject> asteroidPrefabs;
         public Player player;
         public MainBase mainBase;
         public GameObject playerPrefab;
         public GameObject mainBasePrefab;
+        public Game game;
 
         private void Awake()
         {
@@ -29,8 +30,18 @@ namespace AsteroidMiner
                 currentAsteroidsNum--;
                 if (currentAsteroidsNum < maxAsteroidsNum)
                 {
-                    AddAsteroid(startRadius, true);
+                    int diff = maxAsteroidsNum - currentAsteroidsNum;
+                    int max = Random.Range(1, diff + 1);
+                    for (int i = 0; i < max; i++)
+                    {
+                        AddAsteroid(startRadius, true);
+                    }
                 }
+            }
+
+            if (obj.type == StageObjectType.Player)
+            {
+                game.GameOver();
             }
             Destroy(obj.gameObject);
         }
@@ -39,10 +50,10 @@ namespace AsteroidMiner
         {
             for (int i = 0; i < 10; i++)
             {
-                AddAsteroid(5, false);
+                AddAsteroid(5, true);
             }
-            this.mainBase = AddMainBase();
-            this.player = AddPlayer();
+            mainBase = AddMainBase();
+            player = AddPlayer();
             
         }
 
@@ -51,6 +62,7 @@ namespace AsteroidMiner
             Player player = Instantiate(playerPrefab, mainBase.transform).GetComponent<Player>();
             player.transform.position = mainBase.stageObject.GetRandomPositionOnCircle();
             player.transform.rotation = mainBase.stageObject.GetRotationOnCircle(player.transform.position);
+            player.landedObject = mainBase.stageObject;
             return player;
         }
         
@@ -72,7 +84,7 @@ namespace AsteroidMiner
                 obj.rb.linearVelocity = direction.normalized * (Random.Range(50f, 150f) / 100);
             }
 
-            obj.rb.AddTorque(Random.Range(-20, 20));
+            obj.rb.angularVelocity = Random.Range(-10f, 10f);
             currentAsteroidsNum++;
             return obj;
         }
