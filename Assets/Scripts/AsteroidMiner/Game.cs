@@ -22,6 +22,10 @@ namespace AsteroidMiner
         public RectTransform lowerCurtain;
         public RectTransform upperCurtain;
         bool curtainsOpened = false;
+        public TMP_Text playerCollectedText;
+        public TMP_Text rocketCollectedText;
+        public GameObject uiHolder;
+        private bool gameOvered = false;
 
         [Tooltip("Процент закрытия экрана шторками (0.0 до 1.0)")]
         public float curtainCoveragePercent = 0.5f;
@@ -29,6 +33,19 @@ namespace AsteroidMiner
         private void Awake()
         {
             controls = new InputSystem_Actions();
+            EventManager.MissionCompleted.AddListener(OnMissionCompleted);
+            EventManager.PlayerAmountChanged.AddListener(OnPlayerAmountChanged);
+            EventManager.RocketAmountChanged.AddListener(OnRocketAmountChanged);
+        }
+
+        private void OnPlayerAmountChanged(float cur, float max)
+        {
+            playerCollectedText.text = $"{cur} / {max}";
+        }
+
+        private void OnRocketAmountChanged(float cur, float max)
+        {
+            rocketCollectedText.text = $"{cur} / {max}";
         }
 
         private void OnEnable()
@@ -51,19 +68,18 @@ namespace AsteroidMiner
             restartButton.gameObject.SetActive(false);
             gameName.SetActive(true);
             helpText.SetActive(true);
+            uiHolder.SetActive(false);
             stage.Init();
             FadeIn(1f);
         }
 
         public void GameOver()
         {
+            if(gameOvered) return;
+            gameOvered = true;
             inputEnabled = false;
-
+            uiHolder.SetActive(false);
             gameOverPanelBg.gameObject.SetActive(true);
-            Color color = gameOverPanelBg.color;
-            color.a = 0;
-            gameOverPanelBg.color = color;
-            gameOverPanelBg.DOFade(1f, 0.5f);
 
             Vector3 startGameOverTextPos = gameOverText.transform.position;
             gameOverText.transform.position = new Vector3(startGameOverTextPos.x + 300, startGameOverTextPos.y,
@@ -78,6 +94,18 @@ namespace AsteroidMiner
             restartButton.transform.DOMoveX(startRestartButtonPos.x, 1f).SetDelay(1f).SetEase(Ease.OutBack);
         }
 
+        public void OnMissionCompleted()
+        {
+            gameOverText.text = "Mission completed!";
+            stage.player.transform.DOJump(stage.mainBase.rocket.position, 1f, 1, 1f)
+                .OnComplete(() =>
+                {
+                    stage.player.gameObject.SetActive(false);
+                    stage.mainBase.StartRocket();
+                });
+            GameOver();
+        }
+
         public void OnAttack(InputAction.CallbackContext context)
         {
             if (inputEnabled == false) return;
@@ -90,6 +118,7 @@ namespace AsteroidMiner
                 helpText.transform.DOMoveX(helpText.transform.position.x + 300, 1f)
                     .OnComplete(() => helpText.SetActive(false));
                 curtainsOpened = true;
+                uiHolder.SetActive(true);
             }
 
             stage?.player?.Jump();
@@ -118,7 +147,7 @@ namespace AsteroidMiner
             Sequence sequence = DOTween.Sequence();
             sequence.Insert(0, upperCurtain.DOAnchorMin(new Vector2(0, 1f), duration));
             sequence.Insert(0, lowerCurtain.DOAnchorMax(new Vector2(1, 0f), duration));
-            sequence.OnComplete(()=> inputEnabled = true);
+            sequence.OnComplete(() => inputEnabled = true);
         }
 
         public void OnFadedOut()

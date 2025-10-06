@@ -384,6 +384,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AsteroidMiner.MainBase
   stageObject: {fileID: 8927721650128287648}
+  uranusAmount: 0
+  uranusAmountMax: 20
+  rocket: {fileID: 5824107614982647139}
 --- !u!114 &8927721650128287648 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9188884422990641420, guid: 4440599b8ba81b447a46f9e50ad7692b, type: 3}

@@ -242,7 +242,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8058092355509953354, guid: f6e60e5d597222346b4f515a4fada903, type: 3}
       propertyPath: destroyDistance
-      value: 15
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -280,6 +280,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AsteroidMiner.Player
   onGround: 1
   jumpPower: 5
+  landedObject: {fileID: 0}
+  landedAsteroid: {fileID: 0}
+  mainBase: {fileID: 0}
+  uranusAmount: 0
+  uranusAmountMax: 50
 --- !u!58 &3922963567811522723
 CircleCollider2D:
   m_ObjectHideFlags: 0

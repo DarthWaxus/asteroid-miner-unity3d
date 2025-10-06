@@ -12,6 +12,7 @@ namespace AsteroidMiner
         public int maxAsteroidsNum = 30;
         public float startRadius = 2000;
         public List<GameObject> asteroidPrefabs;
+        List<Asteroid> asteroids = new List<Asteroid>();
         public Player player;
         public MainBase mainBase;
         public GameObject playerPrefab;
@@ -25,16 +26,19 @@ namespace AsteroidMiner
 
         private void OnStageObjectDestroyed(StageObject obj)
         {
-            if(obj.type == StageObjectType.Asteroid)
+            if (obj.type == StageObjectType.Asteroid)
             {
                 currentAsteroidsNum--;
                 if (currentAsteroidsNum < maxAsteroidsNum)
                 {
+                    int notActiveAmount = asteroids.FindAll(a => !a.gameObject.activeSelf).Count;
                     int diff = maxAsteroidsNum - currentAsteroidsNum;
-                    int max = Random.Range(1, diff + 1);
+                    int max = Mathf.Clamp(Random.Range(1, diff + 1), 0, notActiveAmount);
                     for (int i = 0; i < max; i++)
                     {
-                        AddAsteroid(startRadius, true);
+                        Asteroid asteroid = asteroids.Find(a => !a.gameObject.activeSelf);
+                        asteroid.gameObject.SetActive(true);
+                        AddAsteroid(asteroid, startRadius, true);
                     }
                 }
             }
@@ -43,18 +47,20 @@ namespace AsteroidMiner
             {
                 game.GameOver();
             }
-            Destroy(obj.gameObject);
+
+            obj.gameObject.SetActive(false);
         }
 
         public void Init()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < maxAsteroidsNum; i++)
             {
-                AddAsteroid(5, true);
+                Asteroid asteroid = CreateAsteroid();
+                AddAsteroid(asteroid, Random.Range(5, startRadius), true);
             }
+
             mainBase = AddMainBase();
             player = AddPlayer();
-            
         }
 
         public Player AddPlayer()
@@ -65,28 +71,35 @@ namespace AsteroidMiner
             player.landedObject = mainBase.stageObject;
             return player;
         }
-        
+
         public MainBase AddMainBase()
         {
             return Instantiate(mainBasePrefab, transform).GetComponent<MainBase>();
         }
 
-        public StageObject AddAsteroid(float radius, bool initVelocity = false)
+        public Asteroid CreateAsteroid()
         {
-            GameObject asteroid = asteroidPrefabs[Random.Range(0, asteroidPrefabs.Count)];
-            StageObject obj = Instantiate(asteroid, transform).GetComponent<StageObject>();
-            obj.transform.position = Random.insideUnitCircle.normalized * radius;
+            Asteroid asteroid= Instantiate(asteroidPrefabs[Random.Range(0, asteroidPrefabs.Count)], transform)
+                .GetComponent<Asteroid>();
+            asteroids.Add(asteroid);
+            return asteroid;
+        }
 
+        public Asteroid AddAsteroid(Asteroid asteroid, float radius, bool initVelocity = false)
+        {
+            StageObject obj = asteroid.GetComponent<StageObject>();
+            asteroid.transform.position = Random.insideUnitCircle.normalized * radius;
+            asteroid.Recycle();
+            asteroid.transform.localScale = Vector3.one*Random.Range(0.8f, 1.1f);
             if (initVelocity)
             {
                 Vector2 direction = -obj.transform.position;
                 direction += Random.insideUnitCircle * 300f;
-                obj.rb.linearVelocity = direction.normalized * (Random.Range(50f, 150f) / 100);
+                obj.rb.linearVelocity = direction.normalized * (Random.Range(150f, 300f) / 100);
             }
 
-            obj.rb.angularVelocity = Random.Range(-10f, 10f);
             currentAsteroidsNum++;
-            return obj;
+            return asteroid;
         }
     }
 }

@@ -11,10 +11,14 @@ namespace AsteroidMiner
         {
             if (this.amount <= 0) return;
             this.amount -= amount;
-            if (this.view)
-            {
-                this.view.localScale = Vector3.one * (this.amount / 100f);
-            }
+            SetAmount(this.amount);
+        }
+
+        public void SetAmount(float amount)
+        {
+            this.amount = amount;
+            float v = this.amount / 20f;
+            view.localScale = new Vector3(v, v, v);
         }
     }
 }

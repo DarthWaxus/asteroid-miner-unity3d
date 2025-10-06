@@ -13,6 +13,9 @@ namespace AsteroidMiner
         public float jumpPower = 10f;
         public StageObject landedObject;
         public Asteroid landedAsteroid;
+        public MainBase mainBase;
+        public float uranusAmount = 0;
+        public float uranusAmountMax = 50f;
 
         private void Awake()
         {
@@ -21,10 +24,11 @@ namespace AsteroidMiner
 
         public void Jump()
         {
-            if(!onGround) return;
+            if (!onGround) return;
             onGround = false;
             landedObject = null;
             landedAsteroid = null;
+            mainBase = null;
             transform.parent = null;
             rb.simulated = true;
             rb.angularVelocity = 0;
@@ -38,6 +42,7 @@ namespace AsteroidMiner
             if (onGround) return;
             onGround = true;
             landedAsteroid = stageObject.GetComponent<Asteroid>();
+            mainBase = stageObject.GetComponent<MainBase>();
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0;
             rb.simulated = false;
@@ -49,9 +54,21 @@ namespace AsteroidMiner
 
         IEnumerator ConsumeRoutine()
         {
-            while (onGround && landedAsteroid)
+            while (onGround)
             {
-                landedAsteroid.Consume(1);
+                if (landedAsteroid && uranusAmount < uranusAmountMax)
+                {
+                    landedAsteroid.Consume(1);
+                    uranusAmount += 1;
+                    EventManager.PlayerAmountChanged.Invoke(uranusAmount, uranusAmountMax);
+                }
+
+                if (mainBase && uranusAmount > 0)
+                {
+                    uranusAmount -= 1;
+                    EventManager.PlayerAmountChanged.Invoke(uranusAmount, uranusAmountMax);
+                    mainBase.AddUranus(1);
+                }
                 yield return new WaitForSeconds(0.1f);
             }
         }
@@ -59,7 +76,8 @@ namespace AsteroidMiner
         private void OnTriggerEnter2D(Collider2D other)
         {
             StageObject stageObject = other.gameObject.GetComponent<StageObject>();
-            if (stageObject&& !onGround && (stageObject.type == StageObjectType.Asteroid || stageObject.type == StageObjectType.MainBase))
+            if (stageObject && !onGround && (stageObject.type == StageObjectType.Asteroid ||
+                                             stageObject.type == StageObjectType.MainBase))
             {
                 Land(stageObject);
             }
