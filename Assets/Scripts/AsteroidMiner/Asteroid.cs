@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Ami.BroAudio;
 using UnityEngine;
 using DG.Tweening;
+using Random = UnityEngine.Random;
 
 namespace AsteroidMiner
 {
@@ -8,6 +11,13 @@ namespace AsteroidMiner
     {
         public List<Uranus> uranuses;
         public Transform view;
+        public SoundID collisionSound;
+        public StageObject stageObject;
+
+        private void Awake()
+        {
+            stageObject ??= GetComponent<StageObject>();
+        }
 
         public void Consume(float amount)
         {
@@ -23,6 +33,19 @@ namespace AsteroidMiner
             foreach (Uranus uranus in uranuses)
             {
                 uranus.SetAmount(Random.Range(0, 5));
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (other.collider.CompareTag("MainBase"))
+            {
+                BroAudio.Play(collisionSound, transform.position);
+            }
+            if (other.collider.CompareTag("MainBase") || other.collider.CompareTag("Asteroid"))
+            {
+                stageObject.stage.asteroidCollisionFx.transform.position = other.contacts[0].point;
+                stageObject.stage.asteroidCollisionFx.Play();
             }
         }
     }

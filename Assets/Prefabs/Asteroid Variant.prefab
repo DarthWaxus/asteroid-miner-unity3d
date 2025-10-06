@@ -1323,6 +1323,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Asteroid Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 5566553693915215447, guid: f6e60e5d597222346b4f515a4fada903, type: 3}
+      propertyPath: m_TagString
+      value: Asteroid
+      objectReference: {fileID: 0}
     - target: {fileID: 7225596702013643202, guid: f6e60e5d597222346b4f515a4fada903, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1461,6 +1465,10 @@ MonoBehaviour:
   - {fileID: 967721115803198226}
   - {fileID: 211082968208155544}
   view: {fileID: 1160584792213621430}
+  collisionSound:
+    ID: 1073741824
+    _sourceAsset: {fileID: 11400000, guid: 45a44c93e4d5de14196c536062c67e1d, type: 2}
+    <DebugObject>k__BackingField: {fileID: 261857226559330183}
 --- !u!4 &1160584792213621430 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6843548859299883878, guid: f6e60e5d597222346b4f515a4fada903, type: 3}

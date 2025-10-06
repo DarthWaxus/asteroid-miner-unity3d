@@ -1,4 +1,5 @@
 ﻿using System;
+using Ami.BroAudio;
 using DG.Tweening;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ namespace AsteroidMiner
         public float uranusAmount = 0;
         public float uranusAmountMax = 100;
         public Transform rocket;
+        public GameObject rocketTrail;
+        public SoundID winSound;
 
         private void Awake()
         {
@@ -26,8 +29,10 @@ namespace AsteroidMiner
 
         public void StartRocket()
         {
+            if (winSound.IsValid()) BroAudio.Play(winSound);
             rocket.transform.SetParent(null);
-            rocket.DOMove(rocket.up * 20, 3).SetEase(Ease.InSine);
+            rocketTrail.SetActive(true);
+            rocket.DOMove(rocket.up * 20, 1.5f).SetEase(Ease.InSine);
         }
     }
 }

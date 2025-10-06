@@ -10,6 +10,7 @@ namespace AsteroidMiner
         public float rotateSpeed = 0;
         public StageObjectType type = StageObjectType.None;
         public float destroyDistance = 50;
+        public Stage stage;
 
         private void FixedUpdate()
         {

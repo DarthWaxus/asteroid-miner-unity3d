@@ -1,3 +1,4 @@
+using Ami.BroAudio;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -26,9 +27,10 @@ namespace AsteroidMiner
         public TMP_Text rocketCollectedText;
         public GameObject uiHolder;
         private bool gameOvered = false;
+        public Transform cam;
+        private bool camShaking = false;
 
-        [Tooltip("Процент закрытия экрана шторками (0.0 до 1.0)")]
-        public float curtainCoveragePercent = 0.5f;
+        public SoundID musicSound;
 
         private void Awake()
         {
@@ -36,8 +38,15 @@ namespace AsteroidMiner
             EventManager.MissionCompleted.AddListener(OnMissionCompleted);
             EventManager.PlayerAmountChanged.AddListener(OnPlayerAmountChanged);
             EventManager.RocketAmountChanged.AddListener(OnRocketAmountChanged);
+            EventManager.ShakeCamera.AddListener(ShakeCamera);
         }
 
+        public void ShakeCamera(float strength=0.1f)
+        {
+            if(camShaking) return;
+            camShaking = true;
+            cam.DOShakePosition(0.1f, strength).OnComplete(() => camShaking = false);
+        }
         private void OnPlayerAmountChanged(float cur, float max)
         {
             playerCollectedText.text = $"{cur} / {max}";
@@ -96,8 +105,9 @@ namespace AsteroidMiner
 
         public void OnMissionCompleted()
         {
+            if(gameOvered) return;
             gameOverText.text = "Mission completed!";
-            stage.player.transform.DOJump(stage.mainBase.rocket.position, 1f, 1, 1f)
+            stage.player.transform.DOJump(stage.mainBase.rocket.position, 1f, 1, 0.2f)
                 .OnComplete(() =>
                 {
                     stage.player.gameObject.SetActive(false);
@@ -147,7 +157,11 @@ namespace AsteroidMiner
             Sequence sequence = DOTween.Sequence();
             sequence.Insert(0, upperCurtain.DOAnchorMin(new Vector2(0, 1f), duration));
             sequence.Insert(0, lowerCurtain.DOAnchorMax(new Vector2(1, 0f), duration));
-            sequence.OnComplete(() => inputEnabled = true);
+            sequence.OnComplete(() =>
+            {
+                inputEnabled = true;
+                BroAudio.Play(musicSound);
+            });
         }
 
         public void OnFadedOut()

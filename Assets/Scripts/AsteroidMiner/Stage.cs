@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ami.BroAudio;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -18,6 +19,7 @@ namespace AsteroidMiner
         public GameObject playerPrefab;
         public GameObject mainBasePrefab;
         public Game game;
+        public ParticleSystem asteroidCollisionFx;
 
         private void Awake()
         {
@@ -45,6 +47,7 @@ namespace AsteroidMiner
 
             if (obj.type == StageObjectType.Player)
             {
+                BroAudio.Play(player.gameOverSound);
                 game.GameOver();
             }
 
@@ -69,18 +72,25 @@ namespace AsteroidMiner
             player.transform.position = mainBase.stageObject.GetRandomPositionOnCircle();
             player.transform.rotation = mainBase.stageObject.GetRotationOnCircle(player.transform.position);
             player.landedObject = mainBase.stageObject;
+            player.stageObject = player.GetComponent<StageObject>();
+            player.stageObject.stage = this;
             return player;
         }
 
         public MainBase AddMainBase()
         {
-            return Instantiate(mainBasePrefab, transform).GetComponent<MainBase>();
+            MainBase mainBase = Instantiate(mainBasePrefab, transform).GetComponent<MainBase>();
+            mainBase.stageObject = mainBase.GetComponent<StageObject>();
+            mainBase.stageObject.stage = this;
+            return mainBase;
         }
 
         public Asteroid CreateAsteroid()
         {
             Asteroid asteroid= Instantiate(asteroidPrefabs[Random.Range(0, asteroidPrefabs.Count)], transform)
                 .GetComponent<Asteroid>();
+            asteroid.stageObject = asteroid.GetComponent<StageObject>();
+            asteroid.stageObject.stage = this;
             asteroids.Add(asteroid);
             return asteroid;
         }
